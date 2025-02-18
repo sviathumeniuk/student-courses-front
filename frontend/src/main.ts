@@ -51,7 +51,7 @@ import { PaymentComponent } from './app/payments/payments.component';
 import { LoadsComponent } from './app/loads/loads.component';
 import { GroupsComponent } from './app/groups/groups.component';
 import { LayoutComponent } from './app/layout/layout.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 
 const routes = [
   { path: '', component: LoginComponent },
@@ -76,7 +76,8 @@ const appConfig = {
   providers: [
     provideRouter(routes),
     HttpClientModule,
-    RouterModule
+    RouterModule,
+    provideHttpClient()
   ]
 };
 
