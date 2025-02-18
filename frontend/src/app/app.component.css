@@ -1,0 +1,19 @@
+.wrapper {
+    display: flex;
+    position: relative;
+  }
+  
+  app-sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed; /* Закріплює сайдбар по лівому краю */
+    z-index: 1000; /* Високий z-index, щоб сайдбар був на передньому плані */
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 20px;
+    margin-left: 250px; /* Залишає місце для сайдбара */
+    z-index: 10; /* Забезпечує, що основний контент буде позаду сайдбара */
+  }
+  
