@@ -1,0 +1,109 @@
+<!-- groups.component.html -->
+<div class="container mx-4 my-4">
+  <h2 class="text-2xl font-bold mb-4">Управління групами</h2>
+
+  <!-- Форма для створення/редагування групи -->
+  <form [formGroup]="groupForm" (ngSubmit)="onSubmit()" class="mb-6 p-4 border rounded">
+    <h3 class="text-xl mb-3">{{ isEditing ? 'Редагування групи' : 'Створення нової групи' }}</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="form-group">
+        <label for="speciality" class="block mb-1">Спеціальність:</label>
+        <input type="text" id="speciality" formControlName="speciality" 
+               class="w-full p-2 border rounded">
+        <div *ngIf="groupForm.get('speciality')?.errors?.['required'] && groupForm.get('speciality')?.touched"
+             class="text-red-500 text-sm mt-1">
+          Поле обов'язкове
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="department" class="block mb-1">Кафедра:</label>
+        <input type="text" id="department" formControlName="department" 
+               class="w-full p-2 border rounded">
+        <div *ngIf="groupForm.get('department')?.errors?.['required'] && groupForm.get('department')?.touched"
+             class="text-red-500 text-sm mt-1">
+          Поле обов'язкове
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="numberOfStudents" class="block mb-1">Кількість студентів:</label>
+        <input type="number" id="numberOfStudents" formControlName="numberOfStudents" 
+               class="w-full p-2 border rounded">
+        <div *ngIf="groupForm.get('numberOfStudents')?.errors?.['required'] && groupForm.get('numberOfStudents')?.touched"
+             class="text-red-500 text-sm mt-1">
+          Поле обов'язкове
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="startDate" class="block mb-1">Дата початку:</label>
+        <input type="date" id="startDate" formControlName="startDate" 
+               class="w-full p-2 border rounded">
+        <div *ngIf="groupForm.get('startDate')?.errors?.['required'] && groupForm.get('startDate')?.touched"
+             class="text-red-500 text-sm mt-1">
+          Поле обов'язкове
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="endDate" class="block mb-1">Дата закінчення:</label>
+        <input type="date" id="endDate" formControlName="endDate" 
+               class="w-full p-2 border rounded">
+        <div *ngIf="groupForm.get('endDate')?.errors?.['required'] && groupForm.get('endDate')?.touched"
+             class="text-red-500 text-sm mt-1">
+          Поле обов'язкове
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 flex gap-2">
+      <button type="submit" [disabled]="!groupForm.valid"
+              class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400">
+        {{ isEditing ? 'Оновити' : 'Створити' }}
+      </button>
+      <button type="button" (click)="resetForm()"
+              class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+        Скасувати
+      </button>
+    </div>
+  </form>
+
+  <!-- Таблиця груп -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="px-4 py-2 border">Спеціальність</th>
+          <th class="px-4 py-2 border">Кафедра</th>
+          <th class="px-4 py-2 border">Кількість студентів</th>
+          <th class="px-4 py-2 border">Дата початку</th>
+          <th class="px-4 py-2 border">Дата закінчення</th>
+          <th class="px-4 py-2 border">Дії</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let group of groups">
+          <td class="px-4 py-2 border">{{ group.speciality }}</td>
+          <td class="px-4 py-2 border">{{ group.department }}</td>
+          <td class="px-4 py-2 border">{{ group.numberOfStudents }}</td>
+          <td class="px-4 py-2 border">{{ group.startDate | date:'dd.MM.yyyy' }}</td>
+          <td class="px-4 py-2 border">{{ group.endDate | date:'dd.MM.yyyy' }}</td>
+          <td class="px-4 py-2 border">
+            <div class="flex gap-2">
+              <button (click)="editGroup(group)"
+                      class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                Редагувати
+              </button>
+              <button (click)="deleteGroup(group._id)"
+                      class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                Видалити
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

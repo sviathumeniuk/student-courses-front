@@ -6,11 +6,11 @@ export const environment = {
         login: '/auth/login',
         register: '/auth/register'
       },
-      groups: 'groups',
-      teachers: 'teachers',
-      students: 'students',
-      payments: 'payments',
-      reports: 'reports',
-      loads: 'loads'
+      groups: '/groups',
+      teachers: '/teachers',
+      students: '/students',
+      payments: '/payments',
+      reports: '/reports',
+      loads: '/loads'
     }
   };

@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class LoadsService {
-  private readonly apiUrl = `${environment.apiUrl}/${environment.endpoints.loads}`;
+  private readonly apiUrl = `${environment.apiUrl}${environment.endpoints.loads}`;
 
   constructor(private readonly http: HttpClient) {}
 
