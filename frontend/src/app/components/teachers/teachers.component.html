@@ -1,96 +1,89 @@
 <div class="teachers-container">
-    <h2>Teachers Management</h2>
-
-    <div *ngIf="isLoading" class="loading">Loading...</div>
-    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-
-     <!-- Error message -->
-     <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
- 
-     <!-- Display found teacher -->
-     <div *ngIf="foundTeacher" class="teacher-card">
-       <h3>{{ foundTeacher.firstname }} {{ foundTeacher.lastname }} (ID: {{ foundTeacher._id }})</h3>
-       <p>Patronymic: {{ foundTeacher.patronymic }}</p>
-       <p>Email: {{ foundTeacher.email }}</p>
-       <p>Phone: {{ foundTeacher.phone }}</p>
-       <p>Experience: {{ foundTeacher.experience }} years</p>
-     </div>
- 
-     <!-- Error message for search -->
-     <div *ngIf="searchErrorMessage" class="error">{{ searchErrorMessage }}</div>
- 
-     <!-- Teachers List -->
-     <div *ngIf="!isLoading && !foundTeacher" class="teachers-list">
-       <div *ngFor="let teacher of teachers" class="teacher-card">
-         <h3>{{ teacher.firstname }} {{ teacher.lastname }} (ID: {{ teacher._id }})</h3>
-         <p>Patronymic: {{ teacher.patronymic }}</p>
-         <p>Email: {{ teacher.email }}</p>
-         <p>Phone: {{ teacher.phone }}</p>
-         <p>Experience: {{ teacher.experience }} years</p>
-         <div class="actions">
-           <button (click)="editTeacher(teacher)">Edit</button>
-           <button (click)="deleteTeacher(teacher._id)" class="delete">Delete</button>
-         </div>
-       </div>
-     </div>
-
-    <!-- Create Form -->
-    <div class="create-form" *ngIf="!isEditing">
-      <h3>Add New Teacher</h3>
-      <form (ngSubmit)="createTeacher()">
-        <input [(ngModel)]="newTeacher.firstname" name="firstname" placeholder="First Name" required>
-        <input [(ngModel)]="newTeacher.lastname" name="lastname" placeholder="Last Name" required>
-        <input [(ngModel)]="newTeacher.patronymic" name="patronymic" placeholder="Patronymic" required>
-        <input [(ngModel)]="newTeacher.email" name="email" type="email" placeholder="Email" required>
-        <input [(ngModel)]="newTeacher.phone" 
-               name="phone" 
-               placeholder="Phone (format: 380XXXXXXXXX)" 
-               pattern="380[0-9]{9}"
-               required>
-        <input [(ngModel)]="newTeacher.experience" 
-               name="experience" 
-               type="number" 
-               placeholder="Experience (years)" 
-               required>
-        <button type="submit">Add Teacher</button>
-      </form>
-    </div>
-
-    <!-- Edit Form -->
-    <div class="edit-form" *ngIf="isEditing && selectedTeacher">
-      <h3>Edit Teacher</h3>
-      <form (ngSubmit)="updateTeacher()">
-        <input [(ngModel)]="selectedTeacher.firstname" name="edit-firstname" placeholder="First Name" required>
-        <input [(ngModel)]="selectedTeacher.lastname" name="edit-lastname" placeholder="Last Name" required>
-        <input [(ngModel)]="selectedTeacher.patronymic" name="edit-patronymic" placeholder="Patronymic" required>
-        <input [(ngModel)]="selectedTeacher.email" name="edit-email" type="email" placeholder="Email" required>
-        <input [(ngModel)]="selectedTeacher.phone" 
-               name="edit-phone" 
-               placeholder="Phone (format: 380XXXXXXXXX)" 
-               pattern="380[0-9]{9}"
-               required>
-        <input [(ngModel)]="selectedTeacher.experience" 
-               name="edit-experience" 
-               type="number" 
-               placeholder="Experience (years)" 
-               required>
-        <button type="submit">Update</button>
-        <button type="button" (click)="cancelEdit()">Cancel</button>
-      </form>
-    </div>
-
-    <!-- Teachers List -->
-    <div class="teachers-list" *ngIf="!isLoading">
-      <div *ngFor="let teacher of teachers" class="teacher-card">
-        <h3>{{ teacher.firstname }} {{ teacher.lastname }}</h3>
-        <p>Patronymic: {{ teacher.patronymic }}</p>
-        <p>Email: {{ teacher.email }}</p>
-        <p>Phone: {{ teacher.phone }}</p>
-        <p>Experience: {{ teacher.experience }} years</p>
-        <div class="actions">
-          <button (click)="editTeacher(teacher)">Edit</button>
-          <button (click)="deleteTeacher(teacher._id)" class="delete">Delete</button>
-        </div>
-      </div>
-    </div>
+  <div *ngIf="isLoading">
+    Loading...
   </div>
+
+  <div>
+    <input for="searchId" id="searchId" [(ngModel)]="searchId" name="searchId">
+    <button (click)="loadEntityById(searchId)">Search</button>
+  </div>
+
+    <div *ngIf="searchedEntity">
+      <h3>Search Result:</h3>
+      <p><strong>Id:</strong> {{searchedEntity._id}} </p>
+      <p><strong>Firstname:</strong> {{searchedEntity.firstname}} </p>
+      <p><strong>Lastname:</strong> {{searchedEntity.lastname}} </p>
+      <p><strong>Patronymic:</strong> {{searchedEntity.patronymic}} </p>
+      <p><strong>Email:</strong> {{searchedEntity.email}} </p>
+      <p><strong>Phone:</strong> {{searchedEntity.phone}} </p>
+      <p><strong>Experience:</strong> {{searchedEntity.experience}} </p>
+    </div>
+
+    <div *ngIf="!isLoading">
+      <h2>Teachers List</h2>
+      <table *ngIf="entities.length > 0; else noTeachers">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Patronymic</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Experience</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let entity of entities">
+            <td>{{ entity._id }}</td>
+            <td>{{ entity.firstname }}</td>
+            <td>{{ entity.lastname }}</td>
+            <td>{{ entity.patronymic }}</td>
+            <td>{{ entity.email }}</td>
+            <td>{{ entity.phone }}</td>
+            <td>{{ entity.experience }}</td>
+            <td>
+              <button (click)="editEntity(entity)">Edit</button>
+              <button (click)="deleteEntity(entity._id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #noTeachers>
+        <p>No teachers available.</p>
+      </ng-template>
+    </div>
+
+    <div>
+      <h2>{{ isEditing ? 'Edit Teacher' : 'Create Teacher' }}</h2>
+      <form (ngSubmit)="isEditing ? updateEntity() : createEntity()">
+        <div>
+          <label for="firstname">Firstname:</label>
+          <input type="text" id="firstname" [(ngModel)]="formData.firstname" name="firstname" required>
+        </div>
+        <div>
+          <label for="lastname">Lastname:</label>
+          <input type="text" id="lastname" [(ngModel)]="formData.lastname" name="lastname" required>
+        </div>
+        <div>
+          <label for="patronymic">Patronymic:</label>
+          <input type="text" id="patronymic" [(ngModel)]="formData.patronymic" name="patronymic" required>
+        </div>
+        <div>
+          <label for="email">Email:</label>
+          <input type="email" id="email" [(ngModel)]="formData.email" name="email" required>
+        </div>
+        <div>
+          <label for="phone">Phone:</label>
+          <input type="tel" id="phone" [(ngModel)]="formData.phone" name="phone" required>
+        </div>
+        <div>
+          <label for="experience">Experience:</label>
+          <input type="number" id="experience" [(ngModel)]="formData.experience" name="experience" required>
+        </div>
+        <button type="submit">{{ isEditing ? 'Update' : 'Create' }}</button>
+      </form>
+    </div>
+</div>

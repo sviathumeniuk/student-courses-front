@@ -49,9 +49,4 @@ export class AuthService {
         localStorage.removeItem('user');
         this.currentUserSubject.next(null);
     }
-
-    hasRole(role: string): boolean {
-        const user = this.getCurrentUser();
-        return user ? user.role === role : false;
-    }
 }

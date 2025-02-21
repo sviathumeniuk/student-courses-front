@@ -1,9 +1,7 @@
-import { Component, Input, OnInit, Type } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { Entity } from '../../models/entity.model';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-base',
@@ -21,7 +19,9 @@ export class BaseComponent<T extends Entity> implements OnInit {
   isLoading: boolean = false;
   isEditing: boolean = false;
   selectedEntity: T | null = null;
+  searchedEntity: T | null = null;
   formData: Partial<T> = {};
+  searchId: string = '';
 
   constructor() {}
 
@@ -41,6 +41,20 @@ export class BaseComponent<T extends Entity> implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  loadEntityById(id: string): void {
+    this.isLoading = true;
+    this.entityService.getById(id).subscribe({
+      next: (entity: T) => {
+        this.searchedEntity = entity;
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        console.log('Error loading entity by id: ', error);
+        this.isLoading = false;
+      }
+    })
   }
 
   createEntity(): void {

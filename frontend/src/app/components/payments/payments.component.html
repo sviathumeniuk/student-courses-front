@@ -1,62 +1,94 @@
 <div class="payments-container">
-  <h1>Payments Management</h1>
 
-  <!-- Display error messages -->
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
-
-  <!-- Loading indicator -->
-  <div *ngIf="isLoading" class="loading">
+  <div *ngIf="isLoading">
     Loading...
   </div>
 
-  <!-- Payments List -->
-  <div class="payments-list">
-    <h2>Payments List</h2>
-    <ul>
-      <li *ngFor="let payment of payments" class="payment-item">
-        <p><strong>Teacher:</strong> {{ payment.teacher }}</p>
-        <p><strong>Amount:</strong> {{ payment.amount }}</p>
-        <p><strong>Status:</strong> {{ payment.paymentStatus }}</p>
-        <p><strong>Method:</strong> {{ payment.paymentMethod }}</p>
-        <p><strong>Notes:</strong> {{ payment.notes }}</p>
-        <button (click)="editPayment(payment)">Edit</button>
-        <button (click)="deletePayment(payment._id)">Delete</button>
-      </li>
-    </ul>
+  <div>
+    <input for="searchId" id="searchId" [(ngModel)]="searchId" name="searchId">
+    <button (click)="loadEntityById(searchId)">Search</button>
   </div>
 
-  <!-- Create/Edit Payment Form -->
-  <div class="payment-form">
+  <div *ngIf="searchedEntity">
+    <h3>Search Result:</h3>
+    <p><strong>Id:</strong>{{ searchedEntity._id }}</p>
+    <p><strong>Teacher:</strong>{{ searchedEntity.teacher }}</p>
+    <p><strong>Amount:</strong>{{ searchedEntity.amount }}</p>
+    <p><strong>Payment Status:</strong>{{ searchedEntity.paymentStatus }}</p>
+    <p><strong>Payment Method:</strong>{{ searchedEntity.paymentMethod }}</p>
+    <p><strong>Notes:</strong>{{ searchedEntity.notes }}</p>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <h2>Payments List</h2>
+    <table *ngIf="entities.length > 0; else noPayments">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Teacher</th>
+          <th>Amount</th>
+          <th>Payment Status</th>
+          <th>Payment Method</th>
+          <th>Notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entity of entities">
+          <td>{{ entity._id }}</td>
+          <td>{{ entity.teacher }}</td>
+          <td>{{ entity.amount }}</td>
+          <td>{{ entity.paymentStatus }}</td>
+          <td>{{ entity.paymentMethod }}</td>
+          <td>{{ entity.notes }}</td>
+          <td>
+            <button (click)="editEntity(entity)">Edit</button>
+            <button (click)="deleteEntity(entity._id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noPayments>
+      <p>No payments available.</p>
+    </ng-template>
+  </div>
+
+  <div>
     <h2>{{ isEditing ? 'Edit Payment' : 'Create Payment' }}</h2>
-    <form (ngSubmit)="isEditing ? updatePayment() : createPayment()">
+    <form (ngSubmit)="isEditing ? updateEntity() : createEntity()">
       <div>
         <label for="teacher">Teacher:</label>
-        <input type="text" id="teacher" [(ngModel)]="formData.teacher" name="teacher" required />
+        <input type="text" id="teacher" [(ngModel)]="formData.teacher" name="teacher">
       </div>
       <div>
         <label for="amount">Amount:</label>
-        <input type="number" id="amount" [(ngModel)]="formData.amount" name="amount" required />
+        <input type="number" id="amount" [(ngModel)]="formData.amount" name="amount">
       </div>
       <div>
         <label for="paymentStatus">Payment Status:</label>
-        <select id="paymentStatus" [(ngModel)]="formData.paymentStatus" name="paymentStatus" required>
+        <select id="paymentStatus" [(ngModel)]="formData.paymentStatus" name="paymentStatus">
           <option value="pending">Pending</option>
-          <option value="completed">Completed</option>
-          <option value="failed">Failed</option>
+          <option value="paid">Paid</option>
+          <option value="overdue">Overdue</option>
         </select>
       </div>
       <div>
         <label for="paymentMethod">Payment Method:</label>
-        <input type="text" id="paymentMethod" [(ngModel)]="formData.paymentMethod" name="paymentMethod" required />
+        <select id="paymentMethod" [(ngModel)]="formData.paymentMethod" name="paymentMethod">
+          <option value="cash">Cash</option>
+          <option value="creditCard">Credit Card</option>
+          <option value="bankTransfer">Bank Transfer</option>
+        </select>
       </div>
       <div>
         <label for="notes">Notes:</label>
-        <textarea id="notes" [(ngModel)]="formData.notes" name="notes"></textarea>
+        <input type="text" id="notes" [(ngModel)]="formData.notes" name="notes">
       </div>
-      <button type="submit">{{ isEditing ? 'Update Payment' : 'Create Payment' }}</button>
-      <button type="button" (click)="cancelEdit()" *ngIf="isEditing">Cancel</button>
+      <div>
+        <button type="submit">{{ isEditing ? 'Update Payment' : 'Create Payment' }}</button>
+        <button type="button" (click)="cancelEdit()" *ngIf="isEditing">Cancel</button>
+      </div>
     </form>
   </div>
 </div>

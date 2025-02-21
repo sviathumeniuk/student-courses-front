@@ -3,7 +3,7 @@ export interface Payment extends Entity {
     teacher: string;
     amount: number;
     date: Date;
-    paymentStatus: 'paid' | 'pending';
-    paymentMethod: 'cash' | 'bank transfer';
+    paymentStatus: '';
+    paymentMethod: '';
     notes: string;
   }

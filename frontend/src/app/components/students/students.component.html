@@ -1,76 +1,99 @@
-<div class="container">
-    <h2>Students Management</h2>
-  
-    <!-- Error Message Display -->
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
-    </div>
-  
-    <!-- Loading Indicator -->
-    <div *ngIf="isLoading" class="loading">
-      Loading...
-    </div>
-    
-    <!-- Add New Student Form -->
-    <div class="add-form" *ngIf="!isEditing">
-      <h3>Add New Student</h3>
-      <input type="text" [(ngModel)]="newStudent.firstname" placeholder="First Name">
-      <input type="text" [(ngModel)]="newStudent.lastname" placeholder="Last Name">
-      <input type="text" [(ngModel)]="newStudent.patronymic" placeholder="Patronymic">
-      <input type="email" [(ngModel)]="newStudent.email" placeholder="Email">
-      <input type="tel" [(ngModel)]="newStudent.phone" placeholder="Phone">
-      <input type="text" [(ngModel)]="newStudent.group" placeholder="Group ID">
-      <input type="text" [(ngModel)]="newStudent.status" placeholder="Status">
-      <button (click)="createStudent()">Add Student</button>
-    </div>
-  
-    <!-- Edit Student Form -->
-    <div class="edit-form" *ngIf="isEditing && selectedStudent">
-      <h3>Edit Student</h3>
-      <input type="text" [(ngModel)]="selectedStudent.firstname" placeholder="First Name">
-      <input type="text" [(ngModel)]="selectedStudent.lastname" placeholder="Last Name">
-      <input type="text" [(ngModel)]="selectedStudent.patronymic" placeholder="Patronymic">
-      <input type="email" [(ngModel)]="selectedStudent.email" placeholder="Email">
-      <input type="tel" [(ngModel)]="selectedStudent.phone" placeholder="Phone">
-      <input type="text" [(ngModel)]="selectedStudent.group" placeholder="Group ID">
-      <input type="text" [(ngModel)]="selectedStudent.status" placeholder="Status">
-      <button (click)="updateStudent()">Update Student</button>
-      <button (click)="cancelEdit()">Cancel</button>
-    </div>
-  
-    <!-- Students List -->
-    <div class="students-list">
-      <h3>Students List</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Patronymic</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Group</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let student of students">
-            <td>{{student._id}}</td>
-            <td>{{student.firstname}}</td>
-            <td>{{student.lastname}}</td>
-            <td>{{student.patronymic}}</td>
-            <td>{{student.email}}</td>
-            <td>{{student.phone}}</td>
-            <td>{{student.group}}</td>
-            <td>{{student.status}}</td>
-            <td>
-              <button (click)="editStudent(student)">Edit</button>
-              <button (click)="deleteStudent(student._id)">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div class="students-container">
+
+  <div *ngIf="isLoading">
+    Loading...
   </div>
+
+  <div>
+    <input for="searchId" id="searchId" [(ngModel)]="searchId" name="searchId">
+    <button (click)="loadEntityById(searchId)">Search</button>
+  </div>
+
+  <div *ngIf="searchedEntity">
+    <h3>Search Result:</h3>
+    <p><strong>Id:</strong> {{searchedEntity._id}} </p>
+    <p><strong>Firstname:</strong> {{searchedEntity.firstname}} </p>
+    <p><strong>Lastname:</strong> {{searchedEntity.lastname}} </p>
+    <p><strong>Patronymic (optional):</strong> {{searchedEntity.patronymic}} </p>
+    <p><strong>Email:</strong> {{ searchedEntity.email }} </p>
+    <p><strong>Phone:</strong> {{ searchedEntity.phone }} </p>
+    <p><strong>Group:</strong> {{ searchedEntity.group }} </p>
+    <p><strong>Status:</strong> {{ searchedEntity.status }} </p>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <h2>Students List</h2>
+    <table *ngIf="entities.length > 0; else noStudents">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Patronymic</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Group</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entity of entities">
+          <td>{{ entity._id }}</td>
+          <td>{{ entity.firstname }}</td>
+          <td>{{ entity.lastname }}</td>
+          <td>{{ entity.patronymic }}</td>
+          <td>{{ entity.email }}</td>
+          <td>{{ entity.phone }}</td>
+          <td>{{ entity.group }}</td>
+          <td>{{ entity.status }}</td>
+          <td>
+            <button (click)="editEntity(entity)">Edit</button>
+            <button (click)="deleteEntity(entity._id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noStudents>
+      <p>No students available.</p>
+    </ng-template>
+  </div>
+
+  <div>
+    <h2>{{ isEditing ? 'Edit Student' : 'Create Student' }}</h2>
+    <form (ngSubmit)="isEditing ? updateEntity() : createEntity()">
+      <div>
+        <label for="firstname">Firstname:</label>
+        <input type="text" id="firstname" [(ngModel)]="formData.firstname" name="firstname" required>
+      </div>
+      <div>
+        <label for="lastname">Lastname:</label>
+        <input type="text" id="lastname" [(ngModel)]="formData.lastname" name="lastname" required>
+      </div>
+      <div>
+        <label for="patronymic">Patronymic:</label>
+        <input type="text" id="patronymic" [(ngModel)]="formData.patronymic" name="patronymic">
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" [(ngModel)]="formData.email" name="email" required>
+      </div>
+      <div>
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" [(ngModel)]="formData.phone" name="phone" required>
+      </div>
+      <div>
+        <label for="group">Group:</label>
+        <input type="text" id="group" [(ngModel)]="formData.group" name="group" required>
+      </div>
+      <div>
+        <label for="status">Status:</label>
+        <select id="status" [(ngModel)]="formData.status" name="status" required>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+      <button type="submit">{{ isEditing ? 'Update' : 'Create' }}</button>
+    </form>
+</div>

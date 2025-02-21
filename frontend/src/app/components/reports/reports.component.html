@@ -1,62 +1,88 @@
 <div class="reports-container">
   <h1>Reports Management</h1>
-
-  <!-- Display error messages -->
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
-
-  <!-- Loading indicator -->
+  
   <div *ngIf="isLoading" class="loading">
     Loading...
   </div>
 
-  <!-- Reports List -->
-  <div class="reports-list">
-    <h2>Reports List</h2>
-    <ul>
-      <li *ngFor="let report of reports" class="report-item">
-        <p><strong>Group:</strong> {{ report.group }}</p>
-        <p><strong>Teacher:</strong> {{ report.teacher }}</p>
-        <p><strong>Total Hours:</strong> {{ report.totalHours }}</p>
-        <p><strong>Payment:</strong> {{ report.payment }}</p>
-        <p><strong>Date Range:</strong> {{ report.startDate | date }} - {{ report.endDate | date }}</p>
-        <button (click)="editReport(report)">Edit</button>
-        <button (click)="deleteReport(report._id)">Delete</button>
-      </li>
-    </ul>
+  <div>
+    <input for="searchId" id="searchId" [(ngModel)]="searchId" name="searchId">
+    <button (click)="loadEntityById(searchId)">Search</button>
   </div>
-
-  <!-- Create/Edit Report Form -->
-  <div class="report-form">
-    <h2>{{ isEditing ? 'Edit Report' : 'Create New Report' }}</h2>
-    <form (ngSubmit)="isEditing ? updateReport() : createReport()">
+  
+  <div *ngIf="searchedEntity">
+    <h3>Search Result:</h3>
+    <p><strong>Id:</strong> {{searchedEntity._id}} </p>
+    <p><strong>Group:</strong> {{searchedEntity.group}} </p>
+    <p><strong>Teacher:</strong> {{searchedEntity.teacher}} </p>
+    <p><strong>Number of Hours:</strong> {{searchedEntity.totalHours}} </p>
+    <p><strong>Start Date:</strong> {{searchedEntity.startDate | date: 'shortDate'}} </p>
+    <p><strong>End Date:</strong> {{searchedEntity.endDate | date: 'shortDate'}} </p>
+  </div>
+  
+  <div *ngIf="!isLoading">
+    <h2>Reports List</h2>
+    <table *ngIf="entities.length > 0; else noReports">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Group</th>
+          <th>Teacher</th>
+          <th>Number of Hours</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entity of entities">
+          <td>{{ entity._id }}</td>
+          <td>{{ entity.group }}</td>
+          <td>{{ entity.teacher }}</td>
+          <td>{{ entity.totalHours }}</td>
+          <td>{{ entity.startDate | date: 'shortDate' }}</td>
+          <td>{{ entity.endDate | date: 'shortDate' }}</td>
+          <td>
+            <button (click)="editEntity(entity)">Edit</button>
+            <button (click)="deleteEntity(entity._id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <ng-template #noReports>
+      <p>No reports available.</p>
+    </ng-template>
+  </div>
+  
+  <div>
+    <h2>{{ isEditing ? 'Edit Report' : 'Create Report' }}</h2>
+    <form (ngSubmit)="isEditing ? updateEntity() : createEntity()">
       <div>
         <label for="group">Group:</label>
-        <input type="text" id="group" [(ngModel)]="formData.group" name="group" required />
+        <input type="text" id="group" [(ngModel)]="formData.group" name="group" required>
       </div>
       <div>
         <label for="teacher">Teacher:</label>
-        <input type="text" id="teacher" [(ngModel)]="formData.teacher" name="teacher" required />
+        <input type="text" id="teacher" [(ngModel)]="formData.teacher" name="teacher" required>
       </div>
       <div>
-        <label for="totalHours">Total Hours:</label>
-        <input type="number" id="totalHours" [(ngModel)]="formData.totalHours" name="totalHours" required />
+        <label for="totalHours">Number of Hours:</label>
+        <input type="number" id="totalHours" [(ngModel)]="formData.totalHours" name="totalHours" required>
       </div>
       <div>
         <label for="payment">Payment:</label>
-        <input type="number" id="payment" [(ngModel)]="formData.payment" name="payment" required />
+        <input type="number" id="payment" [(ngModel)]="formData.payment" name="payment" required>
       </div>
       <div>
         <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" [(ngModel)]="formData.startDate" name="startDate" required />
+        <input type="date" id="startDate" [(ngModel)]="formData.startDate" name="startDate" required>
       </div>
       <div>
         <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" [(ngModel)]="formData.endDate" name="endDate" required />
+        <input type="date" id="endDate" [(ngModel)]="formData.endDate" name="endDate" required>
       </div>
-      <button type="submit">{{ isEditing ? 'Update' : 'Create' }}</button>
-      <button type="button" (click)="cancelEdit()" *ngIf="isEditing">Cancel</button>
+      <button type="submit">{{ isEditing ? 'Update Report' : 'Create Report' }}</button>
     </form>
-  </div>
+  </div>  
 </div>

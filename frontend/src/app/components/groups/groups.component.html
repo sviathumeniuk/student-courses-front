@@ -1,15 +1,30 @@
 <div class="groups-container">
-  <!-- Loading indicator -->
-  <div *ngIf="isLoading" class="loading">
+
+  <div *ngIf="isLoading">
     Loading...
   </div>
 
-  <!-- Groups list -->
-  <div class="groups-list" *ngIf="!isLoading">
+  <div>
+    <input for="searchId" id="searchId" [(ngModel)]="searchId" name="searchId">
+    <button (click)="loadEntityById(searchId)">Search</button>
+  </div>
+
+  <div *ngIf="searchedEntity">
+    <h3>Search Result:</h3>
+    <p><strong>Id:</strong> {{searchedEntity._id}} </p>
+    <p><strong>Speciality:</strong> {{searchedEntity.speciality}} </p>
+    <p><strong>Department:</strong> {{searchedEntity.department}} </p>
+    <p><strong>Number of Students:</strong> {{searchedEntity.numberOfStudents}} </p>
+    <p><strong>Start Date:</strong> {{searchedEntity.startDate | date: 'shortDate'}} </p>
+    <p><strong>End Date:</strong> {{searchedEntity.endDate | date: 'shortDate'}} </p>
+  </div>
+
+  <div *ngIf="!isLoading">
     <h2>Groups List</h2>
     <table *ngIf="entities.length > 0; else noGroups">
       <thead>
         <tr>
+          <th>Id</th>
           <th>Speciality</th>
           <th>Department</th>
           <th>Number of Students</th>
@@ -38,8 +53,7 @@
     </ng-template>
   </div>
 
-  <!-- Create/Edit form -->
-  <div class="group-form">
+  <div>
     <h2>{{ isEditing ? 'Edit Group' : 'Create Group' }}</h2>
     <form (ngSubmit)="isEditing ? updateEntity() : createEntity()">
       <div>

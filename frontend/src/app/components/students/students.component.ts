@@ -1,116 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Student } from '../../models/student.model';
 import { StudentsService } from '../../services/students.service';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'app-students',
-  templateUrl: './students.component.html',
-  styleUrl: './students.component.css',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
   ],
-  providers: [StudentsService],
+  providers: [
+    StudentsService
+  ],
+  templateUrl: './students.component.html',
+  styleUrls: ['./students.component.css']
 })
-export class StudentsComponent implements OnInit {
-  students: Student[] = [];
-  isLoading: boolean = true;
-  errorMessage: string = '';
-  selectedStudent: Student | null = null;
-  isEditing: boolean = false;
-  newStudent: Partial<Student> = {};
-  searchId: string = '';
-  foundStudent: Student | null = null;
-  searchErrorMessage: string = '';
-  selectedGroupId: string = '';
+export class StudentsComponent extends BaseComponent<Student> {
+  override formData: Partial<Student> = {
+    firstname: '',
+    lastname: '',
+    patronymic: '',
+    email: '',
+    phone: '',
+    group: '',
+    status: ''
+  };
 
-  constructor(private readonly studentService: StudentsService) {}
-
-  ngOnInit(): void {
-    this.loadStudents();
+  constructor(private readonly studentService: StudentsService) {
+    super();
+    this.entityService = studentService;
   }
 
-  loadStudents(): void {
-    this.isLoading = true;
-    this.studentService.getAll().subscribe({
-      next: (data: Student[]) => {
-        this.students = data;
-        this.isLoading = false;
-      },
-      error: (error: any) => {
-        this.errorMessage = 'Error fetching students';
-        this.isLoading = false;
-        console.error('Error:', error);
-      }
-    });
-  }
-
-  createStudent(): void {
-    if (this.newStudent) {
-      this.studentService.create(this.newStudent as Omit<Student, '_id'>).subscribe({
-        next: (student: Student) => {
-          this.students.push(student);
-          this.newStudent = {};
-          this.errorMessage = '';
-        },
-        error: (error: any) => {
-          this.errorMessage = 'Error creating student';
-          console.error('Error:', error);
-        }
-      });
-    }
-  }
-
-  editStudent(student: Student): void {
-    this.selectedStudent = { ...student };
-    this.isEditing = true;
-  }
-
-  updateStudent(): void {
-    if (this.selectedStudent?._id) {
-      this.studentService.update(this.selectedStudent._id, this.selectedStudent).subscribe({
-        next: (updatedStudent: Student) => {
-          const index = this.students.findIndex(s => s._id === updatedStudent._id);
-          if (index !== -1) {
-            this.students[index] = updatedStudent;
-          }
-          this.selectedStudent = null;
-          this.isEditing = false;
-          this.errorMessage = '';
-        },
-        error: (error: any) => {
-          this.errorMessage = 'Error updating student';
-          console.error('Error:', error);
-        }
-      });
-    }
-  }
-
-  deleteStudent(id: string): void {
-    if (confirm('Are you sure you want to delete this student?')) {
-      this.studentService.delete(id).subscribe({
-        next: () => {
-          this.students = this.students.filter(s => s._id !== id);
-          this.errorMessage = '';
-        },
-        error: (error: any) => {
-          this.errorMessage = 'Error deleting student';
-          console.error('Error:', error);
-        }
-      });
-    }
-  }
-
-  cancelEdit(): void {
-    this.selectedStudent = null;
-    this.isEditing = false;
-  }
-
-  clearFilter(): void {
-    this.selectedGroupId = '';
-    this.loadStudents();
+  override resetForm(): void {
+    this.formData = {
+      firstname: '',
+      lastname: '',
+      patronymic: '',
+      email: '',
+      phone: '',
+      group: '',
+      status: ''
+    };
   }
 }
