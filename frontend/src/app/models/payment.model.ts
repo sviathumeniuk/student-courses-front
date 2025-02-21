@@ -1,5 +1,5 @@
-export interface Payment {
-    _id: string;
+import { Entity } from "./entity.model";
+export interface Payment extends Entity {
     teacher: string;
     amount: number;
     date: Date;

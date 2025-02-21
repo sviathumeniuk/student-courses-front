@@ -10,26 +10,7 @@
     <div *ngIf="isLoading" class="loading">
       Loading...
     </div>
-  
-    <!-- Search by ID Section -->
-    <div class="search-section">
-      <h3>Search Student by ID</h3>
-      <input type="text" [(ngModel)]="searchId" placeholder="Enter student ID">
-      <button (click)="searchStudentById()">Search</button>
-      <div *ngIf="searchErrorMessage" class="error">{{ searchErrorMessage }}</div>
-      
-      <!-- Display found student -->
-      <div *ngIf="foundStudent" class="found-student">
-        <h4>Found Student:</h4>
-        <p>ID: {{foundStudent._id}}</p>
-        <p>Name: {{foundStudent.firstname}} {{foundStudent.patronymic}} {{foundStudent.lastname}}</p>
-        <p>Email: {{foundStudent.email}}</p>
-        <p>Phone: {{foundStudent.phone}}</p>
-        <p>Group: {{foundStudent.group}}</p>
-        <p>Status: {{foundStudent.status}}</p>
-      </div>
-    </div>
-  
+    
     <!-- Add New Student Form -->
     <div class="add-form" *ngIf="!isEditing">
       <h3>Add New Student</h3>

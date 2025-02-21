@@ -4,7 +4,6 @@ export const environment = {
     endpoints: {
       auth: {
         login: '/auth/login',
-        register: '/auth/register'
       },
       groups: '/groups',
       teachers: '/teachers',

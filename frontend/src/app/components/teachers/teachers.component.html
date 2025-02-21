@@ -6,13 +6,6 @@
 
      <!-- Error message -->
      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-
-     <!-- Search by ID -->
-     <div class="search-teacher">
-       <h3>Search Teacher by ID</h3>
-       <input [(ngModel)]="searchId" name="searchId" placeholder="Enter Teacher ID">
-       <button (click)="searchTeacherById()">Search</button>
-     </div>
  
      <!-- Display found teacher -->
      <div *ngIf="foundTeacher" class="teacher-card">

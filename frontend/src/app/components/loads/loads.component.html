@@ -1,96 +1,58 @@
-<div class="container mx-auto p-4">
-    <h2 class="text-2xl font-bold mb-4">Teaching Loads Management</h2>
-    
-    <!-- Load Form -->
-    <div class="bg-white p-4 rounded shadow mb-6">
-      <h3 class="text-xl font-semibold mb-4">{{ editingLoad ? 'Edit Load' : 'Add New Load' }}</h3>
-      <form [formGroup]="loadForm" (ngSubmit)="onSubmit()" class="space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium mb-1">Teacher ID</label>
-            <input type="text" formControlName="teacher" 
-                   class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium mb-1">Group ID</label>
-            <input type="text" formControlName="group" 
-                   class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium mb-1">Subject</label>
-            <input type="text" formControlName="subject" 
-                   class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium mb-1">Hours</label>
-            <input type="number" formControlName="hours" 
-                   class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium mb-1">Type of Class</label>
-            <input type="text" formControlName="typeOfClass" 
-                   class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium mb-1">Payment per Hour</label>
-            <input type="number" formControlName="paymentPerHour" 
-                   class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-        </div>
-        
-        <div class="flex gap-2">
-          <button type="submit" 
-                  class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-            {{ editingLoad ? 'Update' : 'Create' }}
-          </button>
-          <button *ngIf="editingLoad" type="button" 
-                  (click)="cancelEdit()" 
-                  class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
-  
-    <!-- Loads List -->
-    <div class="bg-white rounded shadow">
-      <table class="w-full">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-4 py-2 text-left">Subject</th>
-            <th class="px-4 py-2 text-left">Hours</th>
-            <th class="px-4 py-2 text-left">Type</th>
-            <th class="px-4 py-2 text-left">Payment/Hour</th>
-            <th class="px-4 py-2 text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let load of loads; trackBy: trackById">
-            <td class="px-4 py-2">{{ load.subject }}</td>
-            <td class="px-4 py-2">{{ load.hours }}</td>
-            <td class="px-4 py-2">{{ load.typeOfClass }}</td>
-            <td class="px-4 py-2">{{ load.paymentPerHour }}</td>
-            <td class="px-4 py-2">
-              <button (click)="editLoad(load)" 
-                      class="text-blue-500 hover:text-blue-700 mr-2">
-                Edit
-              </button>
-              <button (click)="deleteLoad(load._id)" 
-                      class="text-red-500 hover:text-red-700">
-                Delete
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="loads.length === 0">
-            <td colspan="5" class="px-4 py-2 text-center">No loads found</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div class="loads-container">
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
   </div>
-  
+
+  <div *ngIf="isLoading" class="loading">
+    Loading...
+  </div>
+
+  <div class="loads-list">
+    <h2>Loads List</h2>
+    <ul>
+      <li *ngFor="let load of loads" class="load-item">
+        <p><strong>Id:</strong> {{load._id}} </p>
+        <p><strong>TeacherId:</strong> {{ load.teacher }}</p>
+        <p><strong>Group:</strong> {{ load.group }}</p>
+        <p><strong>Subject:</strong> {{ load.subject }}</p>
+        <p><strong>Hours:</strong> {{ load.hours }}</p>
+        <p><strong>Type of class:</strong> {{ load.typeOfClass }}</p>
+        <p><strong>Payment per hour</strong> {{ load.paymentPerHour }} </p>
+        <button (click)="editLoad(load)">Edit</button>
+        <button (click)="deleteLoad(load._id)">Delete</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="load-form">
+    <h2>{{ isEditing ? 'Edit Load' : 'Create Load' }}</h2>
+    <form (ngSubmit)="isEditing ? updateLoad() : createLoad()">
+      <div>
+        <label for="teacher">Teacher:</label>
+        <input type="text" id="teacher" [(ngModel)]="formData.teacher" name="teacher" required />
+      </div>
+      <div>
+        <label for="group">Group:</label>
+        <input type="text" id="group" [(ngModel)]="formData.group" name="group" required />
+      </div>
+      <div>
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" [(ngModel)]="formData.subject" name="subject" required />
+      </div>
+      <div>
+        <label for="hours">Hours:</label>
+        <input type="number" id="hours" [(ngModel)]="formData.hours" name="hours" required />
+      </div>
+      <div>
+        <label for="typeOfClass">Type of class:</label>
+        <input type="text" id="typeOfClass" [(ngModel)]="formData.typeOfClass" name="typeOfClass" required />
+      </div>
+      <div>
+        <label for="paymentPerHour">Payment per hour:</label>
+        <input type="number" id="paymentPerHour" [(ngModel)]="formData.paymentPerHour" name="paymentPerHour" required />
+      </div>
+      <button type="submit">{{ isEditing ? 'Update Load' : 'Create Load' }}</button>
+      <button type="button" (click)="cancelEdit()" *ngIf="isEditing">Cancel</button>
+    </form> <!-- Closing form tag here -->
+  </div> <!-- Closing div.load-form here -->
+</div>

@@ -1,5 +1,5 @@
-export interface Group {
-    _id: string;
+import { Entity } from './entity.model';
+export interface Group extends Entity {
     speciality: string;
     department: string;
     numberOfStudents: number;

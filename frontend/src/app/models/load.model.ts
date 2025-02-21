@@ -1,5 +1,5 @@
-export interface Load {
-    _id: string;
+import { Entity } from "./entity.model";
+export interface Load extends Entity {
     teacher: string;
     group: string;
     subject: string;

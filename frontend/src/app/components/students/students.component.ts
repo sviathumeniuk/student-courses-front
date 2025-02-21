@@ -35,7 +35,7 @@ export class StudentsComponent implements OnInit {
 
   loadStudents(): void {
     this.isLoading = true;
-    this.studentService.getAllStudents().subscribe({
+    this.studentService.getAll().subscribe({
       next: (data: Student[]) => {
         this.students = data;
         this.isLoading = false;
@@ -50,7 +50,7 @@ export class StudentsComponent implements OnInit {
 
   createStudent(): void {
     if (this.newStudent) {
-      this.studentService.createStudent(this.newStudent as Omit<Student, '_id'>).subscribe({
+      this.studentService.create(this.newStudent as Omit<Student, '_id'>).subscribe({
         next: (student: Student) => {
           this.students.push(student);
           this.newStudent = {};
@@ -71,7 +71,7 @@ export class StudentsComponent implements OnInit {
 
   updateStudent(): void {
     if (this.selectedStudent?._id) {
-      this.studentService.updateStudent(this.selectedStudent._id, this.selectedStudent).subscribe({
+      this.studentService.update(this.selectedStudent._id, this.selectedStudent).subscribe({
         next: (updatedStudent: Student) => {
           const index = this.students.findIndex(s => s._id === updatedStudent._id);
           if (index !== -1) {
@@ -91,7 +91,7 @@ export class StudentsComponent implements OnInit {
 
   deleteStudent(id: string): void {
     if (confirm('Are you sure you want to delete this student?')) {
-      this.studentService.deleteStudent(id).subscribe({
+      this.studentService.delete(id).subscribe({
         next: () => {
           this.students = this.students.filter(s => s._id !== id);
           this.errorMessage = '';
@@ -107,26 +107,6 @@ export class StudentsComponent implements OnInit {
   cancelEdit(): void {
     this.selectedStudent = null;
     this.isEditing = false;
-  }
-
-  searchStudentById(): void {
-    if (!this.searchId.trim()) {
-      this.searchErrorMessage = 'Please enter a valid ID';
-      this.foundStudent = null;
-      return;
-    }
-
-    this.studentService.getStudentById(this.searchId).subscribe({
-      next: (student: Student) => {
-        this.foundStudent = student;
-        this.searchErrorMessage = '';
-      },
-      error: (error: any) => {
-        this.searchErrorMessage = 'Student not found';
-        this.foundStudent = null;
-        console.error('Error:', error);
-      }
-    });
   }
 
   clearFilter(): void {

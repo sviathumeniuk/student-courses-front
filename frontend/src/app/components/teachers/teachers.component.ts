@@ -34,7 +34,7 @@ export class TeachersComponent implements OnInit {
 
   loadTeachers(): void {
     this.isLoading = true;
-    this.teacherService.getAllTeachers().subscribe({
+    this.teacherService.getAll().subscribe({
       next: (data: Teacher[]) => {
         this.teachers = data;
         this.isLoading = false;
@@ -49,7 +49,7 @@ export class TeachersComponent implements OnInit {
 
   createTeacher(): void {
     if (this.newTeacher) {
-      this.teacherService.createTeacher(this.newTeacher as Omit<Teacher, 'id'>).subscribe({
+      this.teacherService.create(this.newTeacher as Omit<Teacher, 'id'>).subscribe({
         next: (teacher: Teacher) => {
           this.teachers.push(teacher);
           this.newTeacher = {};
@@ -70,7 +70,7 @@ export class TeachersComponent implements OnInit {
 
   updateTeacher(): void {
     if (this.selectedTeacher?._id) {
-      this.teacherService.updateTeacher(this.selectedTeacher._id, this.selectedTeacher).subscribe({
+      this.teacherService.update(this.selectedTeacher._id, this.selectedTeacher).subscribe({
         next: (updatedTeacher: Teacher) => {
           const index = this.teachers.findIndex(t => t._id === updatedTeacher._id);
           if (index !== -1) {
@@ -90,7 +90,7 @@ export class TeachersComponent implements OnInit {
 
   deleteTeacher(id: string): void {
     if (confirm('Are you sure you want to delete this teacher?')) {
-      this.teacherService.deleteTeacher(id).subscribe({
+      this.teacherService.delete(id).subscribe({
         next: () => {
           this.teachers = this.teachers.filter(t => t._id !== id);
           this.errorMessage = '';
@@ -108,23 +108,4 @@ export class TeachersComponent implements OnInit {
     this.isEditing = false;
   }
 
-  searchTeacherById(): void {
-    if (!this.searchId.trim()) {
-      this.searchErrorMessage = 'Please enter a valid ID';
-      this.foundTeacher = null;
-      return;
-    }
-
-    this.teacherService.getTeacherById(this.searchId).subscribe({
-      next: (teacher: Teacher) => {
-        this.foundTeacher = teacher;
-        this.searchErrorMessage = '';
-      },
-      error: (error: any) => {
-        this.searchErrorMessage = 'Teacher not found';
-        this.foundTeacher = null;
-        console.error('Error:', error);
-      }
-    });
-  }
 }

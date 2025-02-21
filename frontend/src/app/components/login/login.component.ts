@@ -1,15 +1,18 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';  // Імпортуємо Router
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
@@ -17,42 +20,35 @@ export class LoginComponent {
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
-  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly router: Router) {
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
-  onLoginSuccess(): void {
-    this.router.navigate(['/teachers']);
-  }
-
   onSubmit(): void {
     if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
+      const credentials = this.loginForm.value;
 
-      this.http.post('http://localhost:5000/api/auth/login', { email, password })
-        .subscribe({
-          next: (response: any) => {
-            if (response?.token) {
-              localStorage.setItem('token', response.token);
-              console.log('JWT Token saved in localStorage:', response.token);
-              this.successMessage = 'Ви успішно увійшли!';
-              this.errorMessage = null;
-              this.onLoginSuccess();
-            } else {
-              this.errorMessage = 'Не вдалося отримати токен';
-            }
-          },
-          error: (error) => {
-            console.error('Login error:', error);
-            this.errorMessage = 'Невірний email або пароль!';
-            this.successMessage = null;
-          }
-        });
+      this.authService.login(credentials).subscribe({
+        next: (response) => {
+          this.successMessage = 'Success!';
+          this.errorMessage = null;
+          this.router.navigate(['/groups']);
+        },
+        error: (error) => {
+          console.error('Login error:', error);
+          this.errorMessage = 'Invalid email or password!';
+          this.successMessage = null;
+        },
+      });
     } else {
-      this.errorMessage = 'Будь ласка, виправте помилки у формі!';
+      this.errorMessage = 'Please fix the errors in the form!';
     }
   }
 }
