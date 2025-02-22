@@ -1,93 +1,94 @@
-<div class="payments-container">
-
-  <div *ngIf="isLoading">
+<div class="page-container">
+  <div class="loader" *ngIf="isLoading">
     Loading...
   </div>
 
-  <div>
-    <input for="searchId" id="searchId" [(ngModel)]="searchId" name="searchId">
-    <button (click)="loadEntityById(searchId)">Search</button>
+  <div class="search-container">
+    <input class="input-field" for="searchId" id="searchId" [(ngModel)]="searchId" name="searchId" placeholder="Enter ID">
+    <button class="action-button primary-button" (click)="loadEntityById(searchId)">Search</button>
+  </div>  
+
+  <div class="card" *ngIf="searchedEntity">
+    <h1 class="section-title">Search Result</h1>
+    <div class="info-grid">
+      <p class="info-item"><span class="label">Id:</span> {{ searchedEntity._id }}</p>
+      <p class="info-item"><span class="label">Teacher:</span> {{ searchedEntity.teacher }}</p>
+      <p class="info-item"><span class="label">Amount:</span> {{ searchedEntity.amount }}</p>
+      <p class="info-item"><span class="label">Payment Status:</span> {{ searchedEntity.paymentStatus }}</p>
+      <p class="info-item"><span class="label">Payment Method:</span> {{ searchedEntity.paymentMethod }}</p>
+      <p class="info-item"><span class="label">Notes:</span> {{ searchedEntity.notes }}</p>
+    </div>
   </div>
 
-  <div *ngIf="searchedEntity">
-    <h3>Search Result:</h3>
-    <p><strong>Id:</strong>{{ searchedEntity._id }}</p>
-    <p><strong>Teacher:</strong>{{ searchedEntity.teacher }}</p>
-    <p><strong>Amount:</strong>{{ searchedEntity.amount }}</p>
-    <p><strong>Payment Status:</strong>{{ searchedEntity.paymentStatus }}</p>
-    <p><strong>Payment Method:</strong>{{ searchedEntity.paymentMethod }}</p>
-    <p><strong>Notes:</strong>{{ searchedEntity.notes }}</p>
-  </div>
-
-  <div *ngIf="!isLoading">
-    <h2>Payments List</h2>
-    <table *ngIf="entities.length > 0; else noPayments">
+  <div class="table-section" *ngIf="!isLoading">
+    <h2 class="section-title">Payments List</h2>
+    <table class="data-table" *ngIf="entities.length > 0; else noPayments">
       <thead>
         <tr>
-          <th>Id</th>
-          <th>Teacher</th>
-          <th>Amount</th>
-          <th>Payment Status</th>
-          <th>Payment Method</th>
-          <th>Notes</th>
-          <th>Actions</th>
+          <th class="table-header">Id</th>
+          <th class="table-header">Teacher</th>
+          <th class="table-header">Amount</th>
+          <th class="table-header">Payment Status</th>
+          <th class="table-header">Payment Method</th>
+          <th class="table-header">Notes</th>
+          <th class="table-header">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let entity of entities">
-          <td>{{ entity._id }}</td>
-          <td>{{ entity.teacher }}</td>
-          <td>{{ entity.amount }}</td>
-          <td>{{ entity.paymentStatus }}</td>
-          <td>{{ entity.paymentMethod }}</td>
-          <td>{{ entity.notes }}</td>
-          <td>
-            <button (click)="editEntity(entity)">Edit</button>
-            <button (click)="deleteEntity(entity._id)">Delete</button>
+        <tr class="table-row" *ngFor="let entity of entities">
+          <td class="table-cell">{{ entity._id }}</td>
+          <td class="table-cell">{{ entity.teacher }}</td>
+          <td class="table-cell">{{ entity.amount }}</td>
+          <td class="table-cell">{{ entity.paymentStatus }}</td>
+          <td class="table-cell">{{ entity.paymentMethod }}</td>
+          <td class="table-cell">{{ entity.notes }}</td>
+          <td class="table-cell actions-cell">
+            <button class="action-button edit-button" (click)="editEntity(entity)">Edit</button>
+            <button class="action-button delete-button" (click)="deleteEntity(entity._id)">Delete</button>
           </td>
         </tr>
       </tbody>
     </table>
 
     <ng-template #noPayments>
-      <p>No payments available.</p>
+      <p class="empty-message">No payments available.</p>
     </ng-template>
   </div>
 
-  <div>
-    <h2>{{ isEditing ? 'Edit Payment' : 'Create Payment' }}</h2>
-    <form (ngSubmit)="isEditing ? updateEntity() : createEntity()">
-      <div>
-        <label for="teacher">Teacher:</label>
-        <input type="text" id="teacher" [(ngModel)]="formData.teacher" name="teacher">
+  <div class="form-container">
+    <h2 class="section-title">{{ isEditing ? 'Edit Payment' : 'Create Payment' }}</h2>
+    <form class="form-grid" (ngSubmit)="isEditing ? updateEntity() : createEntity()">
+      <div class="form-group">
+        <label class="form-label" for="teacher">Teacher</label>
+        <input class="input-field" type="text" id="teacher" [(ngModel)]="formData.teacher" name="teacher">
       </div>
-      <div>
-        <label for="amount">Amount:</label>
-        <input type="number" id="amount" [(ngModel)]="formData.amount" name="amount">
+      <div class="form-group">
+        <label class="form-label" for="amount">Amount</label>
+        <input class="input-field" type="number" id="amount" [(ngModel)]="formData.amount" name="amount">
       </div>
-      <div>
-        <label for="paymentStatus">Payment Status:</label>
-        <select id="paymentStatus" [(ngModel)]="formData.paymentStatus" name="paymentStatus">
+      <div class="form-group">
+        <label class="form-label" for="paymentStatus">Payment Status</label>
+        <select class="select-field" id="paymentStatus" [(ngModel)]="formData.paymentStatus" name="paymentStatus">
           <option value="pending">Pending</option>
           <option value="paid">Paid</option>
           <option value="overdue">Overdue</option>
         </select>
       </div>
-      <div>
-        <label for="paymentMethod">Payment Method:</label>
-        <select id="paymentMethod" [(ngModel)]="formData.paymentMethod" name="paymentMethod">
+      <div class="form-group">
+        <label class="form-label" for="paymentMethod">Payment Method</label>
+        <select class="select-field" id="paymentMethod" [(ngModel)]="formData.paymentMethod" name="paymentMethod">
           <option value="cash">Cash</option>
           <option value="creditCard">Credit Card</option>
           <option value="bankTransfer">Bank Transfer</option>
         </select>
       </div>
-      <div>
-        <label for="notes">Notes:</label>
-        <input type="text" id="notes" [(ngModel)]="formData.notes" name="notes">
+      <div class="form-group">
+        <label class="form-label" for="notes">Notes</label>
+        <input class="input-field" type="text" id="notes" [(ngModel)]="formData.notes" name="notes">
       </div>
-      <div>
-        <button type="submit">{{ isEditing ? 'Update Payment' : 'Create Payment' }}</button>
-        <button type="button" (click)="cancelEdit()" *ngIf="isEditing">Cancel</button>
+      <div class="button-group">
+        <button class="action-button submit-button" type="submit">{{ isEditing ? 'Update Payment' : 'Create Payment' }}</button>
+        <button class="action-button cancel-button" type="button" (click)="cancelEdit()" *ngIf="isEditing">Cancel</button>
       </div>
     </form>
   </div>

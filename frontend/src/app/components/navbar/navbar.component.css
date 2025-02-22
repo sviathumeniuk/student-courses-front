@@ -1,8 +1,111 @@
-.navbar {
-    position: fixed; /* або absolute */
+/* 1. Component Host */
+:host {
+    display: block;
+    padding-bottom: 60px; 
+}
+
+/* 2. Navigation Container */
+nav {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    padding: 1rem;
+    box-shadow: 0 4px 30px rgba(218, 165, 32, 0.1);
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000; /* високе значення, щоб бути поверх інших елементів */
-    /* інші стилі для навбару */
-  }
+    z-index: 1000;
+    border-bottom: 1px solid rgba(218, 165, 32, 0.3);
+    margin: 0;
+}
+
+.nav-container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* 3. Navigation List */
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+li {
+    margin: 0;
+}
+
+/* 4. Navigation Links */
+a {
+    color: #e5e5e5;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    position: relative;
+}
+
+/* 5. Link States and Effects */
+a:hover {
+    color: goldenrod;
+}
+
+a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, goldenrod, transparent);
+    transition: width 0.3s ease;
+}
+
+a:hover::after {
+    width: 100%;
+}
+
+a.active {
+    color: goldenrod;
+    background: rgba(218, 165, 32, 0.1);
+}
+
+/* 6. Media Queries */
+@media screen and (max-width: 768px) {
+    /* Tablet adjustments */
+    nav {
+        padding: 0.5rem;
+    }
+
+    ul {
+        gap: 0.5rem;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0.5rem;
+    }
+
+    a {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    /* Mobile adjustments */
+    ul {
+        justify-content: flex-start;
+    }
+
+    a {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.85rem;
+    }
+}

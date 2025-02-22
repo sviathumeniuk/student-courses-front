@@ -1,95 +1,97 @@
-<div class="loads=container">
-  <div *ngIf="isLoading">
+<div class="page-container">
+  <div class="loader" *ngIf="isLoading">
     Loading...
   </div>
 
-  <div>
-    <input for="searchId" id="searchId" [(ngModel)]="searchId" name="searchId">
-    <button (click)="loadEntityById(searchId)">Search</button>
+  <div class="search-container">
+    <input class="input-field" for="searchId" id="searchId" [(ngModel)]="searchId" name="searchId" placeholder="Enter ID">
+    <button class="action-button primary-button" (click)="loadEntityById(searchId)">Search</button>
   </div>
 
-  <div *ngIf="selectedEntity">
-    <h1>Search Result</h1>
-    <p><strong>Id:</strong> {{ selectedEntity._id }}</p>
-    <p><strong>Teacher:</strong> {{ selectedEntity.teacher }}</p>
-    <p><strong>Group:</strong> {{ selectedEntity.group }}</p>
-    <p><strong>Subject:</strong> {{ selectedEntity.subject }}</p>
-    <p><strong>Hours:</strong> {{ selectedEntity.hours }}</p>
-    <p><strong>Type of Class:</strong> {{ selectedEntity.typeOfClass }}</p>
-    <p><strong>Payment Per Hour:</strong> {{ selectedEntity.paymentPerHour }}</p>
+  <div class="card" *ngIf="searchedEntity">
+    <h1 class="section-title">Search Result</h1>
+    <div class="info-grid">
+      <p class="info-item"><span class="label">Id:</span> {{ searchedEntity._id }}</p>
+      <p class="info-item"><span class="label">Teacher:</span> {{ searchedEntity.teacher }}</p>
+      <p class="info-item"><span class="label">Group:</span> {{ searchedEntity.group }}</p>
+      <p class="info-item"><span class="label">Subject:</span> {{ searchedEntity.subject }}</p>
+      <p class="info-item"><span class="label">Hours:</span> {{ searchedEntity.hours }}</p>
+      <p class="info-item"><span class="label">Type of Class:</span> {{ searchedEntity.typeOfClass }}</p>
+      <p class="info-item"><span class="label">Payment Per Hour:</span> {{ searchedEntity.paymentPerHour }}</p>
+    </div>
   </div>
 
-  <div *ngIf="!isLoading">
-    <h2>Loads List</h2>
-    <table *ngIf="entities.length > 0; else noLoads">
+  <div class="table-section" *ngIf="!isLoading">
+    <h2 class="section-title">Loads List</h2>
+    <table class="data-table" *ngIf="entities.length > 0; else noLoads">
       <thead>
         <tr>
-          <th>Id</th>
-          <th>Teacher</th>
-          <th>Group</th>
-          <th>Subject</th>
-          <th>Hours</th>
-          <th>Type of Class</th>
-          <th>Payment Per Hour</th>
-          <th>Actions</th>
+          <th class="table-header">Id</th>
+          <th class="table-header">Teacher</th>
+          <th class="table-header">Group</th>
+          <th class="table-header">Subject</th>
+          <th class="table-header">Hours</th>
+          <th class="table-header">Type of Class</th>
+          <th class="table-header">Payment Per Hour</th>
+          <th class="table-header">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let entity of entities">
-          <td>{{ entity._id }}</td>
-          <td>{{ entity.teacher }}</td>
-          <td>{{ entity.group }}</td>
-          <td>{{ entity.subject }}</td>
-          <td>{{ entity.hours }}</td>
-          <td>{{ entity.typeOfClass }}</td>
-          <td>{{ entity.paymentPerHour }}</td>
-          <td>
-            <button (click)="editEntity(entity)">Edit</button>
-            <button (click)="deleteEntity(entity._id)">Delete</button>
+        <tr class="table-row" *ngFor="let entity of entities">
+          <td class="table-cell">{{ entity._id }}</td>
+          <td class="table-cell">{{ entity.teacher }}</td>
+          <td class="table-cell">{{ entity.group }}</td>
+          <td class="table-cell">{{ entity.subject }}</td>
+          <td class="table-cell">{{ entity.hours }}</td>
+          <td class="table-cell">{{ entity.typeOfClass }}</td>
+          <td class="table-cell">{{ entity.paymentPerHour }}</td>
+          <td class="table-cell actions-cell">
+            <button class="action-button edit-button" (click)="editEntity(entity)">Edit</button>
+            <button class="action-button delete-button" (click)="deleteEntity(entity._id)">Delete</button>
           </td>
         </tr>
       </tbody>
     </table>
 
     <ng-template #noLoads>
-      <p>No loads available.</p>
+      <p class="empty-message">No loads available.</p>
     </ng-template>
   </div>
 
-  <div>
-    <h2>{{ isEditing ? 'Edit Load' : 'Create Load'}}</h2>
-    <form (ngSubmit)="isEditing ? updateEntity() : createEntity()">
-      <div>
-        <label for="teacher">Teacher</label>
-        <input type="text" id="teacher" name="teacher" [(ngModel)]="formData.teacher">
+  <div class="form-container">
+    <h2 class="section-title">{{ isEditing ? 'Edit Load' : 'Create Load'}}</h2>
+    <form class="form-grid" (ngSubmit)="isEditing ? updateEntity() : createEntity()">
+      <div class="form-group">
+        <label class="form-label" for="teacher">Teacher</label>
+        <input class="input-field" type="text" id="teacher" name="teacher" [(ngModel)]="formData.teacher">
       </div>
-      <div>
-        <label for="group">Group</label>
-        <input type="text" id="group" name="group" [(ngModel)]="formData.group">
+      <div class="form-group">
+        <label class="form-label" for="group">Group</label>
+        <input class="input-field" type="text" id="group" name="group" [(ngModel)]="formData.group">
       </div>
-      <div>
-        <label for="subject">Subject</label>
-        <input type="text" id="subject" name="subject" [(ngModel)]="formData.subject">
+      <div class="form-group">
+        <label class="form-label" for="subject">Subject</label>
+        <input class="input-field" type="text" id="subject" name="subject" [(ngModel)]="formData.subject">
       </div>
-      <div>
-        <label for="hours">Hours</label>
-        <input type="number" id="hours" name="hours" [(ngModel)]="formData.hours">
+      <div class="form-group">
+        <label class="form-label" for="hours">Hours</label>
+        <input class="input-field" type="number" id="hours" name="hours" [(ngModel)]="formData.hours">
       </div>
-      <div>
-        <label for="typeOfClass">Type of Class</label>
-        <select id="typeOfClass" name="typeOfClass" [(ngModel)]="formData.typeOfClass">
+      <div class="form-group">
+        <label class="form-label" for="typeOfClass">Type of Class</label>
+        <select class="select-field" id="typeOfClass" name="typeOfClass" [(ngModel)]="formData.typeOfClass">
           <option value="lecture">Lecture</option>
           <option value="seminar">Seminar</option>
           <option value="lab">Lab</option>
         </select>
       </div>
-      <div>
-        <label for="paymentPerHour">Payment Per Hour</label>
-        <input type="number" id="paymentPerHour" name="paymentPerHour" [(ngModel)]="formData.paymentPerHour">
+      <div class="form-group">
+        <label class="form-label" for="paymentPerHour">Payment Per Hour</label>
+        <input class="input-field" type="number" id="paymentPerHour" name="paymentPerHour" [(ngModel)]="formData.paymentPerHour">
       </div>
-      <div>
-        <button type="submit">{{ isEditing ? 'Update Load' : 'Create Load' }}</button>
-        <button type="button" (click)="cancelEdit()" *ngIf="isEditing">Cancel</button>
+      <div class="button-group">
+        <button class="action-button submit-button" type="submit">{{ isEditing ? 'Update Load' : 'Create Load' }}</button>
+        <button class="action-button cancel-button" type="button" (click)="cancelEdit()" *ngIf="isEditing">Cancel</button>
       </div>
     </form>
   </div>

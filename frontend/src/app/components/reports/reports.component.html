@@ -1,88 +1,92 @@
-<div class="reports-container">
-  <h1>Reports Management</h1>
-  
-  <div *ngIf="isLoading" class="loading">
+<div class="page-container">
+  <div class="loader" *ngIf="isLoading">
     Loading...
   </div>
 
-  <div>
-    <input for="searchId" id="searchId" [(ngModel)]="searchId" name="searchId">
-    <button (click)="loadEntityById(searchId)">Search</button>
+  <div class="search-container">
+    <input class="input-field" for="searchId" id="searchId" [(ngModel)]="searchId" name="searchId" placeholder="Enter ID">
+    <button class="action-button primary-button" (click)="loadEntityById(searchId)">Search</button>
   </div>
   
-  <div *ngIf="searchedEntity">
-    <h3>Search Result:</h3>
-    <p><strong>Id:</strong> {{searchedEntity._id}} </p>
-    <p><strong>Group:</strong> {{searchedEntity.group}} </p>
-    <p><strong>Teacher:</strong> {{searchedEntity.teacher}} </p>
-    <p><strong>Number of Hours:</strong> {{searchedEntity.totalHours}} </p>
-    <p><strong>Start Date:</strong> {{searchedEntity.startDate | date: 'shortDate'}} </p>
-    <p><strong>End Date:</strong> {{searchedEntity.endDate | date: 'shortDate'}} </p>
+  <div class="card" *ngIf="searchedEntity">
+    <h1 class="section-title">Search Result</h1>
+    <div class="info-grid">
+      <p class="info-item"><span class="label">Id:</span> {{searchedEntity._id}}</p>
+      <p class="info-item"><span class="label">Group:</span> {{searchedEntity.group}}</p>
+      <p class="info-item"><span class="label">Teacher:</span> {{searchedEntity.teacher}}</p>
+      <p class="info-item"><span class="label">Number of Hours:</span> {{searchedEntity.totalHours}}</p>
+      <p class="info-item"><span class="label">Salary:</span> {{searchedEntity.payment}}</p>
+      <p class="info-item"><span class="label">Start Date:</span> {{searchedEntity.startDate | date: 'shortDate'}}</p>
+      <p class="info-item"><span class="label">End Date:</span> {{searchedEntity.endDate | date: 'shortDate'}}</p>
+    </div>
   </div>
   
-  <div *ngIf="!isLoading">
-    <h2>Reports List</h2>
-    <table *ngIf="entities.length > 0; else noReports">
+  <div class="table-section" *ngIf="!isLoading">
+    <h2 class="section-title">Reports List</h2>
+    <table class="data-table" *ngIf="entities.length > 0; else noReports">
       <thead>
         <tr>
-          <th>Id</th>
-          <th>Group</th>
-          <th>Teacher</th>
-          <th>Number of Hours</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-          <th>Actions</th>
+          <th class="table-header">Id</th>
+          <th class="table-header">Group</th>
+          <th class="table-header">Teacher</th>
+          <th class="table-header">Number of Hours</th>
+          <th class="table-header">Start Date</th>
+          <th class="table-header">End Date</th>
+          <th class="table-header">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let entity of entities">
-          <td>{{ entity._id }}</td>
-          <td>{{ entity.group }}</td>
-          <td>{{ entity.teacher }}</td>
-          <td>{{ entity.totalHours }}</td>
-          <td>{{ entity.startDate | date: 'shortDate' }}</td>
-          <td>{{ entity.endDate | date: 'shortDate' }}</td>
-          <td>
-            <button (click)="editEntity(entity)">Edit</button>
-            <button (click)="deleteEntity(entity._id)">Delete</button>
+        <tr class="table-row" *ngFor="let entity of entities">
+          <td class="table-cell">{{ entity._id }}</td>
+          <td class="table-cell">{{ entity.group }}</td>
+          <td class="table-cell">{{ entity.teacher }}</td>
+          <td class="table-cell">{{ entity.totalHours }}</td>
+          <td class="table-cell">{{ entity.startDate | date: 'shortDate' }}</td>
+          <td class="table-cell">{{ entity.endDate | date: 'shortDate' }}</td>
+          <td class="table-cell actions-cell">
+            <button class="action-button edit-button" (click)="editEntity(entity)">Edit</button>
+            <button class="action-button delete-button" (click)="deleteEntity(entity._id)">Delete</button>
           </td>
         </tr>
       </tbody>
     </table>
     
     <ng-template #noReports>
-      <p>No reports available.</p>
+      <p class="empty-message">No reports available.</p>
     </ng-template>
   </div>
   
-  <div>
-    <h2>{{ isEditing ? 'Edit Report' : 'Create Report' }}</h2>
-    <form (ngSubmit)="isEditing ? updateEntity() : createEntity()">
-      <div>
-        <label for="group">Group:</label>
-        <input type="text" id="group" [(ngModel)]="formData.group" name="group" required>
+  <div class="form-container">
+    <h2 class="section-title">{{ isEditing ? 'Edit Report' : 'Create Report' }}</h2>
+    <form class="form-grid" (ngSubmit)="isEditing ? updateEntity() : createEntity()">
+      <div class="form-group">
+        <label class="form-label" for="group">Group</label>
+        <input class="input-field" type="text" id="group" [(ngModel)]="formData.group" name="group" required>
       </div>
-      <div>
-        <label for="teacher">Teacher:</label>
-        <input type="text" id="teacher" [(ngModel)]="formData.teacher" name="teacher" required>
+      <div class="form-group">
+        <label class="form-label" for="teacher">Teacher</label>
+        <input class="input-field" type="text" id="teacher" [(ngModel)]="formData.teacher" name="teacher" required>
       </div>
-      <div>
-        <label for="totalHours">Number of Hours:</label>
-        <input type="number" id="totalHours" [(ngModel)]="formData.totalHours" name="totalHours" required>
+      <div class="form-group">
+        <label class="form-label" for="totalHours">Number of Hours</label>
+        <input class="input-field" type="number" id="totalHours" [(ngModel)]="formData.totalHours" name="totalHours" required>
       </div>
-      <div>
-        <label for="payment">Payment:</label>
-        <input type="number" id="payment" [(ngModel)]="formData.payment" name="payment" required>
+      <div class="form-group">
+        <label class="form-label" for="payment">Payment</label>
+        <input class="input-field" type="number" id="payment" [(ngModel)]="formData.payment" name="payment" required>
       </div>
-      <div>
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" [(ngModel)]="formData.startDate" name="startDate" required>
+      <div class="form-group">
+        <label class="form-label" for="startDate">Start Date</label>
+        <input class="input-field" type="date" id="startDate" [(ngModel)]="formData.startDate" name="startDate" required>
       </div>
-      <div>
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" [(ngModel)]="formData.endDate" name="endDate" required>
+      <div class="form-group">
+        <label class="form-label" for="endDate">End Date</label>
+        <input class="input-field" type="date" id="endDate" [(ngModel)]="formData.endDate" name="endDate" required>
       </div>
-      <button type="submit">{{ isEditing ? 'Update Report' : 'Create Report' }}</button>
+      <div class="button-group">
+        <button class="action-button submit-button" type="submit">{{ isEditing ? 'Update Report' : 'Create Report' }}</button>
+        <button class="action-button cancel-button" type="button" (click)="cancelEdit()" *ngIf="isEditing">Cancel</button>
+      </div>
     </form>
   </div>  
 </div>

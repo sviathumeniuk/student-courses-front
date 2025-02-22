@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -39,7 +40,7 @@ export class LoginComponent {
         next: (response) => {
           this.successMessage = 'Success!';
           this.errorMessage = null;
-          this.router.navigate(['/groups']);
+          this.router.navigate(['/teachers']);
         },
         error: (error) => {
           console.error('Login error:', error);

@@ -1,59 +1,56 @@
-# Frontend
+## Опис проекту
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.6.
+Цей додаток призначений для **автоматизації проведення курсів підвищення кваліфікації** в навчальному закладі. Він допомагає в адмініструванні навантаження викладачів і маніпуляціях зі студентами. Система дає змогу керувати даними про **групи студентів**, **викладачів**, **навчальне навантаження**, а також **платіжні дані** для викладачів. Користувачі можуть швидко переглядати, додавати, редагувати або видаляти інформацію про ці сутності.
 
-## Development server
+---
 
-To start a local development server, run:
+## Основні функціональності
 
-```bash
-ng serve
-```
+1. **Аутентифікація та авторизація**:
+   - Для доступу до системи користувач повинен авторизуватися за допомогою **JWT токена**.
+   - Після успішного входу, користувач потрапляє на **панель керування**, де має доступ до управління різними сутностями системи.
+   
+2. **Інтерфейс**:
+   - Використовується **Navbar** для навігації між сторінками, кожна з яких відповідає за керування певними сутностями:
+     - **Групи** (спеціальність, відділення, кількість студентів)
+     - **Викладачі** (персональні дані, телефон, стаж)
+     - **Навантаження** (викладач, група, предмет, тип заняття, кількість годин, оплата)
+     - **Студенти** (інформація про студентів, їх групи)
+     - **Платежі** (дані про оплату викладачам за їхню роботу)
+     - **Звіти** (звітність про загальні години викладача і відповідну оплату)
+   
+3. **Керування даними**:
+   - Користувач може виконувати операції **CRUD** (створення, читання, оновлення, видалення) для кожної сутності, взаємодіючи з відповідними таблицями і формами.
+   
+4. **Механізм оплати**:
+   - Враховується **погодинна оплата** для викладачів, яка залежить від типу заняття та предмету. Користувачі можуть переглядати оплату за годину для кожного викладача та відповідний предмет.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## Технології, використані в проекті
+### Frontend
+- Angular (версія 19.1.7)
+- RxJS
+- TypeScript
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Безпека
+- JWT для автентифікації
 
-```bash
-ng generate component component-name
-```
+### Стилізація
+- CSS
+- Responsive design
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## Опис компонентів
 
-## Building
+1. **Navbar**:  
+   Вершина панелі, яка дозволяє користувачам переходити між різними сторінками для керування даними.
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+2. **Сторінки сутностей**:
+   - **Групи**: Керування групами студентів за спеціальностями та відділеннями.
+   - **Викладачі**: Додавання, редагування та перегляд даних викладачів.
+   - **Навантаження**: Створення та управління навантаженням викладачів, з прив'язкою до конкретних груп.
+   - **Студенти**: Перегляд та редагування даних про студентів.
+   - **Платежі**: Облік платежів для викладачів залежно від їхнього навантаження.
+   - **Звіти**: Генерація звітів по загальним годинам та оплаті.
