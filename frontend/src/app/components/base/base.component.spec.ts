@@ -1,4 +1,3 @@
-// src/app/components/base/base.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
@@ -6,12 +5,10 @@ import { of, throwError } from 'rxjs';
 import { BaseComponent } from './base.component';
 import { Entity } from '../../models/entity.model';
 
-// Create a mock entity type for testing
 interface TestEntity extends Entity {
   name: string;
 }
 
-// Mock entity service
 class MockEntityService {
   getAll = jasmine.createSpy('getAll').and.returnValue(of([]));
   getById = jasmine.createSpy('getById').and.returnValue(of({}));
